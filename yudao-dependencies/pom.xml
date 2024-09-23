@@ -76,6 +76,7 @@
         <jimureport.version>1.7.8</jimureport.version>
         <xercesImpl.version>2.12.2</xercesImpl.version>
         <weixin-java.version>4.6.0</weixin-java.version>
+        <esl.version>0.9.2</esl.version>
     </properties>
 
     <dependencyManagement>
@@ -619,6 +620,13 @@
                 <groupId>xerces</groupId>
                 <artifactId>xercesImpl</artifactId>
                 <version>${xercesImpl.version}</version>
+            </dependency>
+
+            <!-- freeswitch esl client 连接工具 -->
+            <dependency>
+                <groupId>org.freeswitch.esl.client</groupId>
+                <artifactId>org.freeswitch.esl.client</artifactId>
+                <version>${esl.version}</version>
             </dependency>
 
         </dependencies>
