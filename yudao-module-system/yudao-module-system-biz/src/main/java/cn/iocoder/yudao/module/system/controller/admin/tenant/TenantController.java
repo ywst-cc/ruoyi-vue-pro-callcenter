@@ -95,6 +95,14 @@ public class TenantController {
         return success(BeanUtils.toBean(pageResult, TenantRespVO.class));
     }
 
+    @GetMapping("/list")
+    @Operation(summary = "获得租户列表")
+    @PreAuthorize("@ss.hasPermission('system:tenant:query')")
+    public CommonResult<List<TenantRespVO>> getTenantList() {
+        List<TenantDO> list = tenantService.getTenantList();
+        return success(BeanUtils.toBean(list, TenantRespVO.class));
+    }
+
     @GetMapping("/export-excel")
     @Operation(summary = "导出租户 Excel")
     @PreAuthorize("@ss.hasPermission('system:tenant:export')")

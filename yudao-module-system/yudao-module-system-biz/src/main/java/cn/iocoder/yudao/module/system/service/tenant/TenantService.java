@@ -66,6 +66,13 @@ public interface TenantService {
     PageResult<TenantDO> getTenantPage(TenantPageReqVO pageReqVO);
 
     /**
+     * 获得租户列表
+     *
+     * @return 租户列表
+     */
+    List<TenantDO> getTenantList();
+
+    /**
      * 获得名字对应的租户
      *
      * @param name 租户名

@@ -246,6 +246,11 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    public List<TenantDO> getTenantList() {
+        return tenantMapper.selectList();
+    }
+
+    @Override
     public TenantDO getTenantByName(String name) {
         return tenantMapper.selectByName(name);
     }
