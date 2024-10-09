@@ -1,4 +1,4 @@
-package cn.iocoder.yudao.module.callcenter.service;
+package cn.iocoder.yudao.module.callcenter.service.call;
 
 import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.MakecallReqVO;
 

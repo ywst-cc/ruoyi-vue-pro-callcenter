@@ -35,13 +35,9 @@ public abstract class AbstractCommand<T> {
         String command = getCommand(obj);
         SendMsg msg = JSON.parseObject(command, SendMsg.class);
 
-        EslMessage response = SpringUtil.getBean(InboundServer.class).sendMsg(msg).getResponse();
-        StringBuffer sb = new StringBuffer();
-        for(String bodyLine: response.getBodyLines()) {
-            sb.append(bodyLine);
-        }
-        log.info(String.format("\n%s\n%s", command, sb));
-        return sb.toString();
+        String response = SpringUtil.getBean(InboundServer.class).sendMsg(msg).getReplyText();
+        log.info(String.format("\n%s\n%s", command, response));
+        return response;
     }
 
     public String msg2string(SendMsg sendMsg) {
@@ -49,7 +45,7 @@ public abstract class AbstractCommand<T> {
     }
 
     public SendMsg getMsg(String uuid, String eventUuid, String appName, String appArg, Boolean addLock) {
-        SendMsg sendMsg = new SendMsg();
+        SendMsg sendMsg = new SendMsg(uuid);
         sendMsg.addCallCommand("execute");
         if (StringUtils.isNotBlank(eventUuid)) {
             sendMsg.addGenericLine("Event-UUID", eventUuid);
@@ -62,6 +58,9 @@ public abstract class AbstractCommand<T> {
         return sendMsg;
     }
 
+    public String getMsgStr(String uuid, String appName, String appArg, Boolean addLock) {
+        return msg2string(getMsg(uuid, null, appName, appArg, addLock));
+    }
 
     public String getMsgStr(String uuid, String eventUuid, String appName, String appArg, Boolean addLock) {
         return msg2string(getMsg(uuid, eventUuid, appName, appArg, addLock));

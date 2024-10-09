@@ -13,7 +13,7 @@ public enum CommandKey {
 
     Originate(Async),
     UuidKill(Async),
-    Bridge(Msg),
+    Bridge(Async),
     ;
 
     private CommandType type;

@@ -3,6 +3,7 @@ package cn.iocoder.yudao.module.callcenter.framework.callcenter.core;
 import cn.iocoder.yudao.module.callcenter.enums.CommandKey;
 import cn.iocoder.yudao.module.callcenter.enums.CommandType;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.AbstractCommand;
+import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.Bridge;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.Originate;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.UuidKill;
 import jakarta.annotation.PostConstruct;
@@ -18,12 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class TradeMain {
 
-    private ConcurrentHashMap<CommandKey, AbstractCommand<Object>> map = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<CommandKey, AbstractCommand<Object>> map = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void commandInit() {
         register(CommandKey.Originate, new Originate());
         register(CommandKey.UuidKill, new UuidKill());
+        register(CommandKey.Bridge, new Bridge());
     }
 
     public String exec(CommandKey key, Object obj) {
