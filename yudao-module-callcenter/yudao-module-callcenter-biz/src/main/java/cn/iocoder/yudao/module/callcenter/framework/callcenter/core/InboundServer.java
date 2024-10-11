@@ -64,7 +64,7 @@ public class InboundServer {
         });
 
         // 订阅ESL事件
-        String[] events = new String[]{CHANNEL_PARK};
+        String[] events = new String[]{CHANNEL_PARK, CHANNEL_CREATE, CHANNEL_ANSWER, CHANNEL_HANGUP_COMPLETE, RECORD_START};
         this.client.setEventSubscriptions("plain", String.join(" ", events));
     }
 

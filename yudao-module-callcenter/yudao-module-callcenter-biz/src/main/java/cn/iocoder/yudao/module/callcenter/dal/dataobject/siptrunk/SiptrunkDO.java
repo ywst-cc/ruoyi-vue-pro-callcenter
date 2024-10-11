@@ -65,5 +65,9 @@ public class SiptrunkDO extends TenantBaseDO {
      * 备注
      */
     private String remark;
+    /**
+     * 主配置
+     */
+    private Boolean master;
 
 }

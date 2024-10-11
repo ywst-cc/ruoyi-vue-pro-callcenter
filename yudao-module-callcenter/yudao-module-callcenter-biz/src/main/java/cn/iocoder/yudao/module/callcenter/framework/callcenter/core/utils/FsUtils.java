@@ -54,4 +54,24 @@ public class FsUtils {
         return callee;
     }
 
+
+    /**
+     * 获取当前Event发生时间
+     * @param map fs通道变量
+     * @return 当前时间字符串
+     */
+    public static String getEventDateLocal(Map<String, String> map) {
+        return map.get("Event-Date-Local");
+    }
+
+
+    /**
+     * 获取录音文件地址
+     * @param map
+     * @return
+     */
+    public static String getRecordFilePath(Map<String, String> map) {
+        return map.get("Record-File-Path");
+    }
+
 }

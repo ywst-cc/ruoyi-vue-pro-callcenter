@@ -52,4 +52,11 @@ public interface ExtensionService {
      */
     PageResult<ExtensionDO> getExtensionPage(ExtensionPageReqVO pageReqVO);
 
+    /**
+     * 查询CTI 分机
+     * @param caller
+     * @return
+     */
+    ExtensionDO getExtensionByCaller(String caller);
+
 }

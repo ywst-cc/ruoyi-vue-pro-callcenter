@@ -52,4 +52,10 @@ public interface SiptrunkService {
      */
     PageResult<SiptrunkDO> getSiptrunkPage(SiptrunkPageReqVO pageReqVO);
 
+    /**
+     * 获取当前租户主配置线路
+     * @param tenantId 租户ID
+     * @return
+     */
+    SiptrunkDO getTenantMasterSiptrunk(Long tenantId);
 }

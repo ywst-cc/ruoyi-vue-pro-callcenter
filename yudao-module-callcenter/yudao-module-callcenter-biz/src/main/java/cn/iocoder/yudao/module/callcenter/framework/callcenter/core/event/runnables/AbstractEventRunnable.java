@@ -12,8 +12,7 @@ import org.redisson.api.RedissonClient;
 public abstract class AbstractEventRunnable implements Runnable{
 
     private final EslEvent eslEvent;
-
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
     public AbstractEventRunnable(EslEvent eslEvent) {
         this.eslEvent = eslEvent;

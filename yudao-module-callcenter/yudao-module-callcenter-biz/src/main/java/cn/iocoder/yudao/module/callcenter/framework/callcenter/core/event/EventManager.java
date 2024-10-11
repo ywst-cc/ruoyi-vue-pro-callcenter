@@ -1,7 +1,6 @@
 package cn.iocoder.yudao.module.callcenter.framework.callcenter.core.event;
 
-import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.event.handlers.AbstractEventHandler;
-import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.event.handlers.ChannelParkHandler;
+import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.event.handlers.*;
 import cn.iocoder.yudao.module.callcenter.framework.threadpool.core.EventExecuteThreadPool;
 import jakarta.annotation.Resource;
 import org.freeswitch.esl.client.transport.event.EslEvent;
@@ -22,6 +21,10 @@ public class EventManager {
 
     public EventManager(){
         registerHandler(new ChannelParkHandler());
+        registerHandler(new ChannelCreateHandler());
+        registerHandler(new ChannelAnswerHandler());
+        registerHandler(new ChannelHangupCompleteHandler());
+        registerHandler(new RecordStartHandler());
     }
 
     private void registerHandler(AbstractEventHandler eventHandler){

@@ -70,4 +70,8 @@ public class SiptrunkRespVO implements VO {
     @ExcelProperty("租户名称")
     private String tenantName;
 
+    @Schema(description = "主配置")
+    @ExcelProperty("主配置")
+    private Boolean master;
+
 }

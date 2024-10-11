@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.callcenter.service.siptrunk;
 
+import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
@@ -75,6 +76,17 @@ public class SiptrunkServiceImpl implements SiptrunkService {
     @TenantIgnore
     public PageResult<SiptrunkDO> getSiptrunkPage(SiptrunkPageReqVO pageReqVO) {
         return siptrunkMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    @TenantIgnore
+    public SiptrunkDO getTenantMasterSiptrunk(Long tenantId) {
+        return siptrunkMapper.selectOne(
+                new LambdaQueryWrapperX<SiptrunkDO>()
+                        .eq(SiptrunkDO::getTenantId, tenantId)
+                        .eq(SiptrunkDO::getActive, true)
+                        .eq(SiptrunkDO::getMaster, true)
+        );
     }
 
 }

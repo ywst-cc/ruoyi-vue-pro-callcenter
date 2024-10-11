@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.callcenter.service.extension;
 
+import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
@@ -75,6 +76,15 @@ public class ExtensionServiceImpl implements ExtensionService {
     @TenantIgnore
     public PageResult<ExtensionDO> getExtensionPage(ExtensionPageReqVO pageReqVO) {
         return extensionMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    @TenantIgnore
+    public ExtensionDO getExtensionByCaller(String caller) {
+        return extensionMapper.selectOne(
+                new LambdaQueryWrapperX<ExtensionDO>()
+                        .eq(ExtensionDO::getExtension, caller)
+        );
     }
 
 }
