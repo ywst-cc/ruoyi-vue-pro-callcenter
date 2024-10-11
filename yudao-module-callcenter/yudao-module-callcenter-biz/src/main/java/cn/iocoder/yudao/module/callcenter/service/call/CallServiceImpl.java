@@ -6,6 +6,8 @@ import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.MakecallReqVO
 import cn.iocoder.yudao.module.callcenter.dal.dataobject.extension.ExtensionDO;
 import cn.iocoder.yudao.module.callcenter.dal.mysql.extension.ExtensionMapper;
 import cn.iocoder.yudao.module.callcenter.enums.CommandKey;
+import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.CdrSessionCacheDao;
+import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.SessionCacheDao;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.TradeMain;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.para.ParaOriginate;
 import com.alibaba.fastjson.JSON;
@@ -25,6 +27,11 @@ public class CallServiceImpl implements CallService {
 
     @Resource
     private ExtensionMapper extensionMapper;
+
+    @Resource
+    private SessionCacheDao sessionCacheDao;
+    @Resource
+    private CdrSessionCacheDao cdrSessionCacheDao;
 
     @Override
     public String makecall(Long userId, MakecallReqVO reqVO) {
@@ -48,6 +55,8 @@ public class CallServiceImpl implements CallService {
         //  3. 执行外呼
         String cdrSessionId = IdUtil.simpleUUID();
         String uuid = IdUtil.randomUUID();
+        sessionCacheDao.bind(uuid, cdrSessionId);
+        cdrSessionCacheDao.handlerSessionCreate(cdrSessionId, caller, callee, uuid, reqVO.getExtra());
 
         tradeMain.exec(CommandKey.Originate, new ParaOriginate(uuid, caller, callee));
         return cdrSessionId;

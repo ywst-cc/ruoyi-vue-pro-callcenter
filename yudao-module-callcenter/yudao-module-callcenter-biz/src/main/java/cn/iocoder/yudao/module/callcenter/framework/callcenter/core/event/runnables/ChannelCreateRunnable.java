@@ -36,7 +36,7 @@ public class ChannelCreateRunnable extends AbstractEventRunnable{
 
             String caller = FsUtils.getCaller(eventHeaders);
             String callee = FsUtils.getCallee(eventHeaders);
-            cdrSessionCacheDao.handlerSessionCreate(cdrSessionId, caller, callee, uuid);
+            cdrSessionCacheDao.handlerSessionCreate(cdrSessionId, caller, callee, uuid, null);
         }
 
         String currentDateTime = FsUtils.getEventDateLocal(eventHeaders);

@@ -214,12 +214,15 @@ public class CdrSessionCacheDao {
      * @param callee 被叫
      * @param uuid channel id
      */
-    public void handlerSessionCreate(String cdrSessionId, String caller, String callee, String uuid) {
+    public void handlerSessionCreate(String cdrSessionId, String caller, String callee, String uuid, String extra) {
         setUUID(cdrSessionId, uuid, Role.A);
         setCallerUUID(cdrSessionId, uuid);
         setLegAni(cdrSessionId, caller);
         setLegDnis(cdrSessionId, callee);
         setDirection(cdrSessionId, Direction.OUTBOUND.name());
+        if (StringUtils.isNotBlank(extra)) {
+            setExtra(cdrSessionId, extra);
+        }
 
         // 根据主叫号码查询 租户ID
         ExtensionDO extensionDO = extensionService.getExtensionByCaller(caller);

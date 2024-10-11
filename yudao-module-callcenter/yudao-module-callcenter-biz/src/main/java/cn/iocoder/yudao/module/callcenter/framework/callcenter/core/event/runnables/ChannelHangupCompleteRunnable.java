@@ -1,17 +1,14 @@
 package cn.iocoder.yudao.module.callcenter.framework.callcenter.core.event.runnables;
 
 import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.iocoder.yudao.framework.common.util.date.DateUtils;
 import cn.iocoder.yudao.module.callcenter.dal.dataobject.cdr.CdrDO;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.CdrSessionCacheDao;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.SessionCacheDao;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.utils.FsUtils;
 import cn.iocoder.yudao.module.callcenter.service.cdr.CdrService;
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.freeswitch.esl.client.transport.event.EslEvent;
@@ -60,11 +57,9 @@ public class ChannelHangupCompleteRunnable extends AbstractEventRunnable{
                 if (!cdrSessionCacheDao.isCdrSaved(cdrSessionId)){
                     // save cdr
                     saveCdr(cdrSessionId);
-
                     cdrSessionCacheDao.setCdrSaved(cdrSessionId);
-
                     // delete cache
-                    // cdrSessionCacheDao.removeCdrSessionCache(cdrSessionId);
+                    cdrSessionCacheDao.removeCdrSessionCache(cdrSessionId);
                 }
             }
         }catch (Exception e) {
@@ -82,8 +77,6 @@ public class ChannelHangupCompleteRunnable extends AbstractEventRunnable{
      * 保存话单
      */
     private void saveCdr(String cdrSessionId) {
-        // log.info(JSON.toJSONString(this.eslEvent));
-
         CdrDO cdrDO = new CdrDO();
         cdrDO.setCallId(cdrSessionId);
         cdrDO.setTenantId(cdrSessionCacheDao.getTenantId(cdrSessionId));
@@ -132,15 +125,15 @@ public class ChannelHangupCompleteRunnable extends AbstractEventRunnable{
         int ringSec = 0;
         int billSec = 0;
         if (StringUtils.isNotBlank(otherLegAnswerTime)) {
-            Duration ring = Duration.between(LocalDateTimeUtil.parse(startTime, DatePattern.NORM_DATETIME_PATTERN),
+            Duration ring = Duration.between(LocalDateTimeUtil.parse(otherLegStartTime, DatePattern.NORM_DATETIME_PATTERN),
                     LocalDateTimeUtil.parse(otherLegAnswerTime, DatePattern.NORM_DATETIME_PATTERN));
             ringSec = (int) ring.getSeconds();
 
             Duration bill = Duration.between(LocalDateTimeUtil.parse(otherLegAnswerTime, DatePattern.NORM_DATETIME_PATTERN),
                     LocalDateTimeUtil.parse(otherLegEndTime, DatePattern.NORM_DATETIME_PATTERN));
             billSec = (int) bill.getSeconds();
-        }else {
-            Duration ring = Duration.between(LocalDateTimeUtil.parse(startTime, DatePattern.NORM_DATETIME_PATTERN),
+        }else if (StringUtils.isNotBlank(otherLegStartTime)) {
+            Duration ring = Duration.between(LocalDateTimeUtil.parse(otherLegStartTime, DatePattern.NORM_DATETIME_PATTERN),
                     LocalDateTimeUtil.parse(endTime, DatePattern.NORM_DATETIME_PATTERN));
             ringSec = (int) ring.getSeconds();
         }
