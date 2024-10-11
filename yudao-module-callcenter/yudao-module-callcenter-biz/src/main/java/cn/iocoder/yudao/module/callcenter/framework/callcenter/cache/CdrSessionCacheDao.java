@@ -168,7 +168,7 @@ public class CdrSessionCacheDao {
      * @param cdrSessionId
      */
     public void removeCdrSessionCache(String cdrSessionId) {
-        stringRedisTemplate.opsForHash().delete(formatKey(cdrSessionId));
+        stringRedisTemplate.delete(formatKey(cdrSessionId));
     }
 
     /**

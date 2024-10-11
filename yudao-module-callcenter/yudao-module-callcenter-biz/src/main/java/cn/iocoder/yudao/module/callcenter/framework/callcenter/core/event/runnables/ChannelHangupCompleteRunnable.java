@@ -143,9 +143,13 @@ public class ChannelHangupCompleteRunnable extends AbstractEventRunnable{
 
         // 计算价格
         BigDecimal fee = cdrSessionCacheDao.getFee(cdrSessionId);
-        BigDecimal price = fee.multiply(new BigDecimal(cdrDO.getBillMin()));
-        cdrDO.setFee(fee);
-        cdrDO.setPrice(price);
+        if (null != fee) {
+            cdrDO.setFee(fee);
+            cdrDO.setPrice(fee.multiply(new BigDecimal(cdrDO.getBillMin())));
+        }else {
+            cdrDO.setFee(BigDecimal.ZERO);
+            cdrDO.setPrice(BigDecimal.ZERO);
+        }
         cdrDO.setSiptrunkId(cdrSessionCacheDao.getSiptrunkId(cdrSessionId));
 
         // 设置录音文件地址
