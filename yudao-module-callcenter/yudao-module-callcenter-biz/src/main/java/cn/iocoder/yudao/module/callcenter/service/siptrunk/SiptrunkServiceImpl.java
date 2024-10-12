@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.callcenter.service.siptrunk;
 
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.iocoder.yudao.framework.tenant.core.aop.TenantIgnore;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.springframework.stereotype.Service;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -87,6 +88,30 @@ public class SiptrunkServiceImpl implements SiptrunkService {
                         .eq(SiptrunkDO::getActive, true)
                         .eq(SiptrunkDO::getMaster, true)
         );
+    }
+
+    @Override
+    @TenantIgnore
+    @Transactional
+    public void updateSiptrunkMaster(Long id) {
+        // 检验存在
+        SiptrunkDO siptrunkDO = siptrunkMapper.selectById(id);
+        if (siptrunkDO == null) {
+            throw exception(SIPTRUNK_NOT_EXISTS);
+        }
+
+        if (siptrunkDO.getTenantId() == null) {
+            throw exception(SIPTRUNK_NOT_EXISTS);
+        }
+
+        // 更新其他为非 master
+        siptrunkMapper.update(
+                new LambdaUpdateWrapper<SiptrunkDO>()
+                        .eq(SiptrunkDO::getTenantId, siptrunkDO.getTenantId())
+                        .set(SiptrunkDO::getMaster, false)
+        );
+        // 更新
+        siptrunkMapper.updateById(new SiptrunkDO().setId(id).setMaster(true));
     }
 
 }

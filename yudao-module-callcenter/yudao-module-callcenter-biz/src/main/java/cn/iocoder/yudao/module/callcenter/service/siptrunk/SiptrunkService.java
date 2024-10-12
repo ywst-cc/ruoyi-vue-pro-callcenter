@@ -58,4 +58,10 @@ public interface SiptrunkService {
      * @return
      */
     SiptrunkDO getTenantMasterSiptrunk(Long tenantId);
+
+    /**
+     * 设置线路为主配置
+     * @param id
+     */
+    void updateSiptrunkMaster(Long id);
 }

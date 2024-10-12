@@ -1,5 +1,8 @@
 package cn.iocoder.yudao.module.callcenter.controller.admin.cdr.vo;
 
+import com.fhs.core.trans.anno.Trans;
+import com.fhs.core.trans.constant.TransType;
+import com.fhs.core.trans.vo.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.util.*;
@@ -11,7 +14,7 @@ import com.alibaba.excel.annotation.*;
 @Schema(description = "管理后台 - 话务数据 Response VO")
 @Data
 @ExcelIgnoreUnannotated
-public class CdrRespVO {
+public class CdrRespVO implements VO {
 
     @Schema(description = "主键", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("主键")
@@ -97,9 +100,15 @@ public class CdrRespVO {
     @ExcelProperty("是否接通")
     private Boolean answered;
 
-    @Schema(description = "呼叫坐席")
-    @ExcelProperty("呼叫坐席")
+    @Schema(description = "坐席ID")
+    @ExcelProperty("坐席ID")
+    @Trans(type = TransType.SIMPLE, targetClassName = "cn.iocoder.yudao.module.system.dal.dataobject.user.AdminUserDO",
+            fields = "nickname", ref = "nickname")
     private Long userId;
+
+    @Schema(description = "坐席名称")
+    @ExcelProperty("坐席名称")
+    private String nickname;
 
     @Schema(description = "录音文件")
     @ExcelProperty("录音文件")
@@ -128,5 +137,15 @@ public class CdrRespVO {
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
     private LocalDateTime createTime;
+
+    @Schema(description = "租户ID")
+    @ExcelProperty("租户ID")
+    @Trans(type = TransType.SIMPLE, targetClassName = "cn.iocoder.yudao.module.system.dal.dataobject.tenant.TenantDO",
+            fields = "name", ref = "tenantName")
+    private Long tenantId;
+
+    @Schema(description = "租户名称")
+    @ExcelProperty("租户名称")
+    private String tenantName;
 
 }

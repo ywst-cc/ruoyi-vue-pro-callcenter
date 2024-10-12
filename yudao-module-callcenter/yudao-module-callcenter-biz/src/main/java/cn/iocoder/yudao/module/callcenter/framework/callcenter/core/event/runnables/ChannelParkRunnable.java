@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.callcenter.framework.callcenter.core.event.runna
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import cn.iocoder.yudao.module.callcenter.dal.dataobject.extension.ExtensionDO;
 import cn.iocoder.yudao.module.callcenter.dal.dataobject.siptrunk.SiptrunkDO;
 import cn.iocoder.yudao.module.callcenter.enums.CommandKey;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.CdrSessionCacheDao;
@@ -10,6 +11,7 @@ import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.TradeMain;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.para.ParaBridge;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.para.ParaUuidKill;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.utils.FsUtils;
+import cn.iocoder.yudao.module.callcenter.service.extension.ExtensionService;
 import cn.iocoder.yudao.module.callcenter.service.siptrunk.SiptrunkService;
 import lombok.extern.slf4j.Slf4j;
 import org.freeswitch.esl.client.transport.event.EslEvent;
@@ -26,6 +28,7 @@ public class ChannelParkRunnable extends AbstractEventRunnable{
     private final SessionCacheDao sessionCacheDao;
     private final CdrSessionCacheDao cdrSessionCacheDao;
     private final SiptrunkService siptrunkService;
+    private final ExtensionService extensionService;
 
     public ChannelParkRunnable(EslEvent eslEvent) {
         super(eslEvent);
@@ -34,6 +37,7 @@ public class ChannelParkRunnable extends AbstractEventRunnable{
         this.sessionCacheDao = SpringUtil.getBean(SessionCacheDao.class);
         this.cdrSessionCacheDao = SpringUtil.getBean(CdrSessionCacheDao.class);
         this.siptrunkService = SpringUtil.getBean(SiptrunkService.class);
+        this.extensionService = SpringUtil.getBean(ExtensionService.class);
     }
 
     @Override
@@ -51,6 +55,14 @@ public class ChannelParkRunnable extends AbstractEventRunnable{
         // 指定被叫uuid
         String calleeUuid = IdUtil.randomUUID();
 
+        // 检查 caller 是否禁用
+        ExtensionDO extensionDO = extensionService.getExtensionByCaller(caller);
+        if (null == extensionDO || !extensionDO.getActive()){
+            log.error("分机[{}]已禁用，无法外呼", caller);
+            tradeMain.exec(CommandKey.UuidKill, new ParaUuidKill(uuid, null));
+            return;
+        }
+
         // 查询被叫应使用的外呼线路
         Long tenantId = cdrSessionCacheDao.getTenantId(cdrSessionId);
         SiptrunkDO siptrunkDO = siptrunkService.getTenantMasterSiptrunk(tenantId);
@@ -60,7 +72,6 @@ public class ChannelParkRunnable extends AbstractEventRunnable{
             tradeMain.exec(CommandKey.UuidKill, new ParaUuidKill(uuid, null));
             return;
         }
-
 
         String no = siptrunkDO.getNo();
         String prefix = siptrunkDO.getPrefix();

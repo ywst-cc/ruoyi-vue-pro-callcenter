@@ -53,6 +53,14 @@ public class SiptrunkController {
         return success(true);
     }
 
+    @PutMapping("/update-master")
+    @Operation(summary = "更新线路配置为 Master")
+    @PreAuthorize("@ss.hasPermission('callcenter:siptrunk:update')")
+    public CommonResult<Boolean> updateFileConfigMaster(@RequestParam("id") Long id) {
+        siptrunkService.updateSiptrunkMaster(id);
+        return success(true);
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "删除外呼线路")
     @Parameter(name = "id", description = "编号", required = true)

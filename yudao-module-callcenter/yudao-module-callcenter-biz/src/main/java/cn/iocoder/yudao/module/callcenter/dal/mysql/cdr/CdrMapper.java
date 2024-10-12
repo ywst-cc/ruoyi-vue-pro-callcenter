@@ -25,6 +25,7 @@ public interface CdrMapper extends BaseMapperX<CdrDO> {
                 .betweenIfPresent(CdrDO::getStartTime, reqVO.getStartTime())
                 .eqIfPresent(CdrDO::getAnswered, reqVO.getAnswered())
                 .betweenIfPresent(CdrDO::getCreateTime, reqVO.getCreateTime())
+                .eqIfPresent(CdrDO::getTenantId, reqVO.getTenantId())
                 .orderByDesc(CdrDO::getId));
     }
 
