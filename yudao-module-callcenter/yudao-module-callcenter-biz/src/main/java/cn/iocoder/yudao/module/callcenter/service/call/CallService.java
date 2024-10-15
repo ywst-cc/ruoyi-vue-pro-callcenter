@@ -1,5 +1,6 @@
 package cn.iocoder.yudao.module.callcenter.service.call;
 
+import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.HangupReqVO;
 import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.MakecallReqVO;
 
 /**
@@ -16,4 +17,11 @@ public interface CallService {
      */
     String makecall(Long userId, MakecallReqVO reqVO);
 
+    /**
+     * 结束通话
+     *
+     * @param reqVO 结束参数
+     * @return 结束结果
+     */
+    Boolean hangup(HangupReqVO reqVO);
 }

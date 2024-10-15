@@ -1,6 +1,7 @@
 package cn.iocoder.yudao.module.callcenter.controller.admin.call;
 
 import cn.iocoder.yudao.framework.common.pojo.CommonResult;
+import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.HangupReqVO;
 import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.MakecallReqVO;
 import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.MakecallRespVO;
 import cn.iocoder.yudao.module.callcenter.service.call.CallService;
@@ -31,6 +32,14 @@ public class CallController {
     //@PreAuthorize("@ss.hasAnyPermissions('')")
     public CommonResult<MakecallRespVO> makecall(@Valid @RequestBody MakecallReqVO reqVO) {
         return CommonResult.success(new MakecallRespVO(callService.makecall(getLoginUserId(), reqVO)));
+    }
+
+    // 结束通话
+    @PostMapping("/hangup")
+    @Operation(summary = "结束通话")
+    //@PreAuthorize("@ss.hasAnyPermissions('')")
+    public CommonResult<Boolean> hangup(@Valid @RequestBody HangupReqVO reqVO) {
+        return CommonResult.success(callService.hangup(reqVO));
     }
 
 }

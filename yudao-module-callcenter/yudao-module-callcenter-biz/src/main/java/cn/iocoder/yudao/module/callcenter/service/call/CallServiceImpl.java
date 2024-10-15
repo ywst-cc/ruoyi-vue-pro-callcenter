@@ -2,6 +2,7 @@ package cn.iocoder.yudao.module.callcenter.service.call;
 
 import cn.hutool.core.util.IdUtil;
 import cn.iocoder.yudao.framework.mybatis.core.query.LambdaQueryWrapperX;
+import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.HangupReqVO;
 import cn.iocoder.yudao.module.callcenter.controller.admin.call.vo.MakecallReqVO;
 import cn.iocoder.yudao.module.callcenter.dal.dataobject.extension.ExtensionDO;
 import cn.iocoder.yudao.module.callcenter.dal.mysql.extension.ExtensionMapper;
@@ -10,6 +11,7 @@ import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.CdrSessionC
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.cache.SessionCacheDao;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.TradeMain;
 import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.para.ParaOriginate;
+import cn.iocoder.yudao.module.callcenter.framework.callcenter.core.command.para.ParaUuidKill;
 import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import static cn.iocoder.yudao.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.iocoder.yudao.module.callcenter.enums.ErrorCodeConstants.CALL_EXTENSION_NOT_EXISTS;
+import static cn.iocoder.yudao.module.callcenter.enums.ErrorCodeConstants.CURRENT_SESSION_NOT_EXISTS;
 
 @Slf4j
 @Service
@@ -60,5 +63,19 @@ public class CallServiceImpl implements CallService {
 
         tradeMain.exec(CommandKey.Originate, new ParaOriginate(uuid, caller, callee));
         return cdrSessionId;
+    }
+
+    @Override
+    public Boolean hangup(HangupReqVO reqVO) {
+        // 当前通话ID
+        String cdrSessionId = reqVO.getCallId();
+        if (!cdrSessionCacheDao.sessionIsExists(cdrSessionId)) {
+            throw exception(CURRENT_SESSION_NOT_EXISTS);
+        }
+
+        // 执行挂机
+        String callerUUID = cdrSessionCacheDao.getCallerUUID(cdrSessionId);
+        tradeMain.exec(CommandKey.UuidKill, new ParaUuidKill(callerUUID, null));
+        return true;
     }
 }

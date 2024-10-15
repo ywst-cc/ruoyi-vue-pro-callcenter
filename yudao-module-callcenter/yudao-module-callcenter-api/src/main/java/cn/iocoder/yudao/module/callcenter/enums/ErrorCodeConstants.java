@@ -14,6 +14,7 @@ public interface ErrorCodeConstants {
     ErrorCode SIPTRUNK_NOT_EXISTS = new ErrorCode(1-100-000-001, "外呼线路不存在");
     ErrorCode SIPTRUNK_TENANT_NOT_EXISTS = new ErrorCode(1-100-000-002, "外呼线路未绑定租户");
     ErrorCode CDR_NOT_EXISTS = new ErrorCode(1-100-000-003, "话务数据不存在");
+    ErrorCode CURRENT_SESSION_NOT_EXISTS = new ErrorCode(1-100-000-004, "当前通话session不存在");
 
     ErrorCode CALL_EXTENSION_NOT_EXISTS = new ErrorCode(1-100-000-100, "呼叫用户未绑定分机");
 }

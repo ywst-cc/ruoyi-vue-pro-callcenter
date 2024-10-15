@@ -63,6 +63,13 @@ public class ChannelParkRunnable extends AbstractEventRunnable{
             return;
         }
 
+        // 防止分机未绑定用户直接外呼 无法关联用户
+        if (null == extensionDO.getOwnerUserId()) {
+            log.error("分机[{}]未绑定用户，无法外呼", caller);
+            tradeMain.exec(CommandKey.UuidKill, new ParaUuidKill(uuid, null));
+            return;
+        }
+
         // 查询被叫应使用的外呼线路
         Long tenantId = cdrSessionCacheDao.getTenantId(cdrSessionId);
         SiptrunkDO siptrunkDO = siptrunkService.getTenantMasterSiptrunk(tenantId);

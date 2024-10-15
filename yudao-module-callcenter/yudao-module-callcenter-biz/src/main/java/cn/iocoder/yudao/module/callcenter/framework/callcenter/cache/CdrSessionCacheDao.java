@@ -162,6 +162,15 @@ public class CdrSessionCacheDao {
         return (String) stringRedisTemplate.opsForHash().get(formatKey(cdrSessionId), "EXTRA");
     }
 
+    /**
+     * 判断通话是否存在
+     * @param cdrSessionId 话单ID
+     * @return 通话是否存在
+     */
+    public boolean sessionIsExists(String cdrSessionId) {
+        return Boolean.TRUE.equals(stringRedisTemplate.hasKey(formatKey(cdrSessionId)));
+    }
+
 
     /**
      * 移除cdr session cache
